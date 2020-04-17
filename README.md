@@ -15,10 +15,22 @@ This is the official Golang SDK for Analysys.
 ## 快速集成
 如果您是第一次使用易观方舟产品，可以通过阅读本文快速了解此产品
 1. 集成 SDK
-在main.js文件的顶部引入SDK。
+
+* 先获取 易观 Golang SDK 
+
+      go get github.com/analysys/ans-go-sdk
+
+* 或更新 本地已经存在的
+
+      go get -u github.com/analysys/ans-go-sdk  
+
+* 引入 易观 Golang SDK
+
+      import sdk "github.com/analysys/ans-go-sdk"
+
 2. 设置初始化接口
 ```Go
-ans.InitAnalysysAgent(Collector lib.Collector, appid string, debugMode int)
+AnalysysAgent = ans.InitAnalysysAgent(Collector lib.Collector, appid string, debugMode int)
 ```
 * appid : 方舟项目对应的唯一标识
 * debug : debug模式，有 0、1、2 三种枚举值。
