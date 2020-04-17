@@ -26,7 +26,7 @@ This is the official Golang SDK for Analysys.
 
 * 引入 易观 Golang SDK
 
-      import sdk "github.com/analysys/ans-go-sdk"
+      import ans "github.com/analysys/ans-go-sdk"
 
 2. 设置初始化接口
 ```Go
