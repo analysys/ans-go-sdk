@@ -1,10 +1,11 @@
 package lib
 
 import (
-	"base"
 	"fmt"
 	"reflect"
 	"strings"
+
+	"github.com/analysys/ans-go-sdk/src/base"
 )
 
 func SuccessMessage() map[interface{}]string {

@@ -1,12 +1,12 @@
 package ans
 
 import (
-	"base"
 	"encoding/json"
 	"fmt"
 	"time"
 
-	lib "github.com/analysys/ans-go-sdk/lib"
+	"github.com/analysys/ans-go-sdk/src/base"
+	"github.com/analysys/ans-go-sdk/src/lib"
 )
 
 // 初始化 SDK
