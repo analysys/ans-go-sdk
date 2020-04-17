@@ -8,7 +8,7 @@ This is the official Golang SDK for Analysys.
 
 * AnalysysAgent.go —— SDK文件
 * src —— SDK 公共方法
-* testDemo —— API调用演示
+* demo —— API调用演示
 
 # Golang SDK 基础说明：
 
