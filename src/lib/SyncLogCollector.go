@@ -27,16 +27,16 @@ func (log *SyncLogCollector) UpLoad(Data string, DebugMode int) bool {
 	log.postArray = log.catchArray
 	if len(log.postArray) > 0 {
 		// 数据发送
-		log.Send(DebugMode)
-		return true
+		return log.Send(DebugMode)
+		// return true
 	}
-	return false
+	return true
 }
 
 func (log *SyncLogCollector) Send(DebugMode int) bool {
 	// 防止 调用flush 进行空上报
 	if len(log.postArray) == 0 {
-		return false
+		return true
 	}
 	// 校验和创建文件夹
 	createFile(log.gerFolder)

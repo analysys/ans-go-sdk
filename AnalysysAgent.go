@@ -69,7 +69,7 @@ type XcontextPost struct {
 }
 
 // 超级属性  key value
-func (ans *Analysys) RegisterSuperProperty(key string, value interface{}) {
+func (ans *Analysys) RegisterSuperProperty(key string, value interface{}) bool {
 	// 校验 key
 	lib.CheckKey("$registerSuperProperty", key)
 	// 校验 value
@@ -84,10 +84,11 @@ func (ans *Analysys) RegisterSuperProperty(key string, value interface{}) {
 	// 超级属性的合并 map 合并 map
 	ans.superProperty = lib.MapObjMerge(superProperty, mapObj)
 	lib.SuccessLog("$registerSuperProperty", key, lib.MapToString(mapObj), 20002)
+	return true
 }
 
 // 超级属性  property
-func (ans *Analysys) RegisterSuperProperties(property map[string]interface{}) {
+func (ans *Analysys) RegisterSuperProperties(property map[string]interface{}) bool {
 	// 校验 map的 string是否符合 key的要求
 	superProperty := ans.superProperty
 	Value := ""
@@ -100,6 +101,7 @@ func (ans *Analysys) RegisterSuperProperties(property map[string]interface{}) {
 		Value = lib.MapToString(property)
 	}
 	lib.SuccessLog("$registerSuperProperties", "", Value, 20002)
+	return true
 }
 
 // 获取超级属性
@@ -122,22 +124,24 @@ func (ans *Analysys) GetSuperProperties() map[string]interface{} {
 }
 
 // 移除单个超级属性
-func (ans *Analysys) UnRegisterSuperProperty(key string) {
+func (ans *Analysys) UnRegisterSuperProperty(key string) bool {
 	//校验 key
 	lib.CheckKey("$unRegisterSuperProperty", key)
 	_, ok := ans.superProperty[key]
 	if ok {
 		delete(ans.superProperty, key)
 		lib.SuccessLog("$unRegisterSuperProperty", "", key, 20003)
-		return
+		return true
 	}
 	lib.SuccessLog("$unRegisterSuperProperty", "", key, 20011)
+	return false
 }
 
 // 移除所有超级属性
-func (ans *Analysys) ClearSuperProperties() {
+func (ans *Analysys) ClearSuperProperties() bool {
 	ans.superProperty = make(map[string]interface{})
 	lib.SuccessLog("$clearSuperProperties", "", "", 20004)
+	return true
 }
 
 /**
@@ -147,15 +151,15 @@ func (ans *Analysys) ClearSuperProperties() {
  * @param properties 用户属性
  */
 
-func (ans *Analysys) ProfileSet(distinctID string, isLogin bool, properties map[string]interface{}, platform string, upLoadTime int) {
+func (ans *Analysys) ProfileSet(distinctID string, isLogin bool, properties map[string]interface{}, platform string, upLoadTime int) bool {
 	// 校验 properties ，不符合提醒，超长截取
 	_, Properties := lib.CheckMap("$profile_set", properties)
 	// 校验uploadTime 满足 13位长度的int  抛日志，这条数据不要，
 	if !lib.CheckUploadTime("$profile_set", upLoadTime) || !lib.CheckDistinctID("$profile_set", distinctID) {
-		return
+		return false
 	}
 	// 全部校验通过上报
-	ans.upLoad(distinctID, isLogin, "$profile_set", Properties, platform, upLoadTime, false)
+	return ans.upLoad(distinctID, isLogin, "$profile_set", Properties, platform, upLoadTime, false)
 }
 
 /**
@@ -164,15 +168,15 @@ func (ans *Analysys) ProfileSet(distinctID string, isLogin bool, properties map[
  * @param isLogin 用户ID是否是登录 ID
  * @param properties 用户属性
  */
-func (ans *Analysys) ProfileSetOnce(distinctID string, isLogin bool, properties map[string]interface{}, platform string, upLoadTime int) {
+func (ans *Analysys) ProfileSetOnce(distinctID string, isLogin bool, properties map[string]interface{}, platform string, upLoadTime int) bool {
 	// 校验 properties ，不符合提醒，超长截取
 	_, Properties := lib.CheckMap("$profile_set_once", properties)
 	// 校验uploadTime 满足 13位长度的int  抛日志，这条数据不要，
 	if !lib.CheckUploadTime("$profile_set_once", upLoadTime) || !lib.CheckDistinctID("$profile_set_once", distinctID) {
-		return
+		return false
 	}
 	// 全部校验通过上报
-	ans.upLoad(distinctID, isLogin, "$profile_set_once", Properties, platform, upLoadTime, false)
+	return ans.upLoad(distinctID, isLogin, "$profile_set_once", Properties, platform, upLoadTime, false)
 }
 
 /**
@@ -182,17 +186,17 @@ func (ans *Analysys) ProfileSetOnce(distinctID string, isLogin bool, properties 
  * @param properties 用户属性
  */
 
-func (ans *Analysys) ProfileIncrement(distinctID string, isLogin bool, properties map[string]int, platform string, upLoadTime int) {
+func (ans *Analysys) ProfileIncrement(distinctID string, isLogin bool, properties map[string]int, platform string, upLoadTime int) bool {
 	// 需要把 参数  map[string]int 转换成 map[string] interface{}
 	Properties := lib.MapIntToMapInter(properties)
 	// 校验 properties ，不符合提醒，超长截取
 	_, Properties = lib.CheckMap("$profile_increment", Properties)
 	// 校验uploadTime 满足 13位长度的int  抛日志，这条数据不要，
 	if !lib.CheckUploadTime("$profile_increment", upLoadTime) || !lib.CheckDistinctID("$profile_increment", distinctID) {
-		return
+		return false
 	}
 	// 全部校验通过上报
-	ans.upLoad(distinctID, isLogin, "$profile_increment", Properties, platform, upLoadTime, false)
+	return ans.upLoad(distinctID, isLogin, "$profile_increment", Properties, platform, upLoadTime, false)
 }
 
 /**
@@ -202,15 +206,15 @@ func (ans *Analysys) ProfileIncrement(distinctID string, isLogin bool, propertie
  * @param properties 用户属性
  */
 
-func (ans *Analysys) ProfileAppend(distinctID string, isLogin bool, properties map[string]interface{}, platform string, upLoadTime int) {
+func (ans *Analysys) ProfileAppend(distinctID string, isLogin bool, properties map[string]interface{}, platform string, upLoadTime int) bool {
 	// 校验 properties ，不符合提醒，超长截取
 	_, Properties := lib.CheckMap("$profile_append", properties)
 	// 校验uploadTime 满足 13位长度的int  抛日志，这条数据不要，
 	if !lib.CheckUploadTime("$profile_append", upLoadTime) || !lib.CheckDistinctID("$profile_append", distinctID) {
-		return
+		return false
 	}
 	// 全部校验通过上报
-	ans.upLoad(distinctID, isLogin, "$profile_append", Properties, platform, upLoadTime, false)
+	return ans.upLoad(distinctID, isLogin, "$profile_append", Properties, platform, upLoadTime, false)
 }
 
 /**
@@ -221,16 +225,16 @@ func (ans *Analysys) ProfileAppend(distinctID string, isLogin bool, properties m
  * @throws AnalysysException
  */
 
-func (ans *Analysys) ProfileUnSet(distinctID string, isLogin bool, property string, platform string, upLoadTime int) {
+func (ans *Analysys) ProfileUnSet(distinctID string, isLogin bool, property string, platform string, upLoadTime int) bool {
 	// 校验属性值
 	lib.CheckKey("$profile_unset", property)
 	// 组建map value为空
 	properties := make(map[string]interface{})
 	properties[property] = ""
 	if !lib.CheckUploadTime("$profile_unset", upLoadTime) || !lib.CheckDistinctID("$profile_unset", distinctID) {
-		return
+		return false
 	}
-	ans.upLoad(distinctID, isLogin, "$profile_unset", properties, platform, upLoadTime, false)
+	return ans.upLoad(distinctID, isLogin, "$profile_unset", properties, platform, upLoadTime, false)
 }
 
 /**
@@ -240,13 +244,13 @@ func (ans *Analysys) ProfileUnSet(distinctID string, isLogin bool, property stri
  * @throws AnalysysException
  */
 
-func (ans *Analysys) ProfileDelete(distinctID string, isLogin bool, platform string, upLoadTime int) {
+func (ans *Analysys) ProfileDelete(distinctID string, isLogin bool, platform string, upLoadTime int) bool {
 	// 创建新的 空 map 上传
 	properties := make(map[string]interface{})
 	if !lib.CheckUploadTime("$profile_delete", upLoadTime) || !lib.CheckDistinctID("$profile_delete", distinctID) {
-		return
+		return false
 	}
-	ans.upLoad(distinctID, isLogin, "$profile_delete", properties, platform, upLoadTime, false)
+	return ans.upLoad(distinctID, isLogin, "$profile_delete", properties, platform, upLoadTime, false)
 }
 
 /**
@@ -256,14 +260,14 @@ func (ans *Analysys) ProfileDelete(distinctID string, isLogin bool, platform str
  * @throws AnalysysException
  */
 
-func (ans *Analysys) Alias(aliasID string, distinctID string, platform string, upLoadTime int) {
+func (ans *Analysys) Alias(aliasID string, distinctID string, platform string, upLoadTime int) bool {
 	// 组建 map
 	properties := make(map[string]interface{})
 	properties["$original_id"] = distinctID
 	if !lib.CheckUploadTime("$alias", upLoadTime) || !lib.CheckAliasID("$alias", aliasID) || !lib.CheckDistinctID("$alias", distinctID) {
-		return
+		return false
 	}
-	ans.upLoad(aliasID, true, "$alias", properties, platform, upLoadTime, false)
+	return ans.upLoad(aliasID, true, "$alias", properties, platform, upLoadTime, false)
 }
 
 /**
@@ -274,21 +278,21 @@ func (ans *Analysys) Alias(aliasID string, distinctID string, platform string, u
  * @param properties 事件属性
  * @throws AnalysysException
  */
-func (ans *Analysys) Track(distinctID string, isLogin bool, eventName string, properties map[string]interface{}, platform string, upLoadTime int) {
+func (ans *Analysys) Track(distinctID string, isLogin bool, eventName string, properties map[string]interface{}, platform string, upLoadTime int) bool {
 	lib.CheckEventName(eventName)
 	_, Properties := lib.CheckMap(eventName, properties)
 	// 允许空map
 	if !lib.CheckUploadTime(eventName, upLoadTime) || !lib.CheckDistinctID(eventName, distinctID) {
-		return
+		return false
 	}
-	ans.upLoad(distinctID, isLogin, eventName, Properties, platform, upLoadTime, true)
+	return ans.upLoad(distinctID, isLogin, eventName, Properties, platform, upLoadTime, true)
 }
 
 /**
  * 立即发送所有收集的信息到服务器
  */
-func (ans *Analysys) Flush() {
-	ans.C.Send(ans.DebugMode)
+func (ans *Analysys) Flush() bool {
+	return ans.C.Send(ans.DebugMode)
 }
 
 /**
@@ -300,7 +304,7 @@ func CurrentTime() int {
 }
 
 // 上传方法 ，此方法是对现有数据的组装和上传条件的校验，符合条件后 触发 发送 send
-func (ans *Analysys) upLoad(distinctID string, isLogin bool, eventName string, properties map[string]interface{}, platform string, upLoadTime int, merFlag bool) {
+func (ans *Analysys) upLoad(distinctID string, isLogin bool, eventName string, properties map[string]interface{}, platform string, upLoadTime int, merFlag bool) bool {
 	// 组建五要素
 	DataComponent := &DataPost{}
 	DataComponent.Appid = ans.Appid
@@ -316,7 +320,7 @@ func (ans *Analysys) upLoad(distinctID string, isLogin bool, eventName string, p
 	// 组建 xcontext ,用map 格式，方便与 properties 进行数据合并
 	contextComponent := make(map[string]interface{})
 	contextComponent["$lib"] = "Go"
-	contextComponent["$lib_version"] = "4.3.0"
+	contextComponent["$lib_version"] = "4.3.1"
 	contextComponent["$debug"] = ans.DebugMode
 	contextComponent["$is_login"] = isLogin
 	contextComponent["$platform"] = platform
@@ -326,5 +330,5 @@ func (ans *Analysys) upLoad(distinctID string, isLogin bool, eventName string, p
 	dataStr := string(data)
 	// 数据之后推进一个 数组，设置同步发送，立即上报
 	ans.cancle = make(chan bool, 1)
-	ans.C.UpLoad(dataStr, ans.DebugMode)
+	return ans.C.UpLoad(dataStr, ans.DebugMode)
 }

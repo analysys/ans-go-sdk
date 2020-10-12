@@ -31,16 +31,16 @@ func (up *SyncCollector) UpLoad(Data string, DebugMode int) bool {
 	up.postArray = up.catchArray
 	if len(up.postArray) > 0 {
 		// 数据发送
-		up.Send(DebugMode)
-		return true
+		return up.Send(DebugMode)
+		// return true
 	}
-	return false
+	return true
 }
 
 func (up *SyncCollector) Send(DebugMode int) bool {
 	// 防止 调用flush 进行空上报
 	if len(up.postArray) == 0 {
-		return false
+		return true
 	}
 	up.catchArray = []string{}
 	postData := "[" + strings.Join(up.postArray, ",") + "]"

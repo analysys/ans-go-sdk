@@ -28,16 +28,16 @@ func (up *BatchCollector) UpLoad(Data string, DebugMode int) bool {
 	up.postArray = up.catchArray
 	if len(up.postArray) >= up.PostNumber {
 		// 数据发送
-		up.Send(DebugMode)
-		return true
+		return up.Send(DebugMode)
+		// return true
 	}
-	return false
+	return true
 }
 
 func (up *BatchCollector) Send(DebugMode int) bool {
 	// 防止 调用flush 进行空上报
 	if len(up.postArray) == 0 {
-		return false
+		return true
 	}
 	// 上报的相关方法
 	up.catchArray = []string{}
