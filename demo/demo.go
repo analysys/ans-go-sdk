@@ -28,16 +28,17 @@ func main() {
 	trackPropertie["producePrice"] = 80      //商品价格
 	trackPropertie["shop"] = "xx网上书城"        //店铺名称
 	viewStatus := AnalysysAgent.Track(distinctId, true, "ViewProduct", trackPropertie, platform, ans.CurrentTime())
-	fmt.Print("是否浏览商品", viewStatus)
+	fmt.Println("是否浏览商品", viewStatus)
 	//用户注册登录
 	registerId := "ABCDEF123456789"
 	aliasStatus := AnalysysAgent.Alias(registerId, distinctId, platform, ans.CurrentTime()) //设置公共属性
-	fmt.Print("是否关联用户", aliasStatus)
+	fmt.Println("是否关联用户", aliasStatus)
 	superPropertie := map[string]interface{}{
 		"sex": "male", //性别
 		"age": 23,     //年龄
 	}
 	registerStatus := AnalysysAgent.RegisterSuperProperties(superPropertie) //用户信息
+	fmt.Println("是否设置用户信息", registerStatus)
 	profiles := map[string]interface{}{
 		"$city":     "北京",    //城市
 		"$province": "北京",    //省份
@@ -52,7 +53,7 @@ func main() {
 		"registerTime": "20180101101010",
 	}
 	setOnceStatus := AnalysysAgent.ProfileSetOnce(registerId, true, profile_age, platform, ans.CurrentTime())
-	fmt.Print("是否关联设置用户首次属性", setOnceStatus)
+	fmt.Println("是否关联设置用户首次属性", setOnceStatus)
 
 	//重新设置公共属性
 	AnalysysAgent.ClearSuperProperties()
@@ -74,7 +75,7 @@ func main() {
 	trackPropertie["orderId"] = "ORDER_12345"
 	trackPropertie["price"] = 80
 	orderStatus := AnalysysAgent.Track(registerId, true, "Order", trackPropertie, platform, ans.CurrentTime())
-	fmt.Print("是否下订单", orderStatus)
+	fmt.Println("是否下订单", orderStatus)
 
 	//支付信息
 	trackPropertie["orderId"] = "ORDER_12345"
@@ -86,7 +87,7 @@ func main() {
 	trackPropertie["price"] = 80
 	trackPropertie["paymentMethod"] = "AliPay"
 	payStatus := AnalysysAgent.Track(registerId, true, "Payment", trackPropertie, platform, ans.CurrentTime())
-	fmt.Print("是否付款", orderStatus)
+	fmt.Println("是否付款", payStatus)
 	AnalysysAgent.Flush()
 
 }
